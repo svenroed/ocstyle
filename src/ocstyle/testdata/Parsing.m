@@ -17,7 +17,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
+//  @ocstyle-include
 
 // OK to not document in .m file.
 @interface UIStateValue : NSObject {

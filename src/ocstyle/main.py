@@ -41,23 +41,34 @@ def checkFile(path, f, maxLineLength):
   result.sort(key=lambda err: err.position if isinstance(err, rules.Error) else 0)
   return result
 
-
 def main():
   """Main body of the script."""
 
   parser = argparse.ArgumentParser()
   parser.add_argument("--maxLineLength", action="store", type=int, default=120, help="Maximum line length")
+  parser.add_argument("--validateIncludes", action="store", type=int, default=0, help="Check included files only")
+  parser.add_argument("--validateExcludes", action="store", type=int, default=1, help="Check all files but the excluded once")
   args, filenames = parser.parse_known_args()
 
   for filename in filenames:
     if not os.path.isdir(filename):
-      print filename
-      for part in check(filename, args.maxLineLength):
-        if isinstance(part, rules.Error):
-          print 'ERROR: %s' % part
-        else:
-          print 'unparsed: %r' % part
-    print
+      with open(filename) as f:
+        content = f.read()
+        needsCheck = 1
+
+        if args.validateIncludes == 1:
+          needsCheck = content.find('@ocstyle-include')
+        elif args.validateExcludes == 1:
+          needsCheck = content.find('@ocstyle-exclude')
+
+        if needsCheck != -1 and args.validateIncludes == 1 or needsCheck == -1 and args.validateExcludes == 1:
+          print filename
+          for part in check(filename, args.maxLineLength):
+            if isinstance(part, rules.Error):
+              print 'ERROR: %s' % part
+            else:
+              print 'unparsed: %r' % part
+        print
 
 
 if __name__ == '__main__':

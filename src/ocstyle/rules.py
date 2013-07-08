@@ -570,21 +570,21 @@ def shouldBeNewline(result, pos):
     return Error('MissingNewline', 'Should have newline after ;', pos, LINES)
 
 
-@rule(-(xsp + keep(';')) + shouldBeNewline + xsp)
-def shouldBeSemicolonAndNewline(result, pos):
-  """A place where there should a semicolon, but compiler-wise it is optional."""
-  errors = []
-  if result:
-    if isinstance(result, Error):
-      errors.append(result)
-      result = None
-    else:
-      errors.extend([e for e in result if isinstance(e, Error)])
-
-  if not result:
-    errors.append(Error('MissingSemicolon', 'Expected a semicolon', pos, LINES))
-
-  return errors or None
+#@rule(-(xsp + keep(';')) + shouldBeNewline + xsp)
+#def shouldBeSemicolonAndNewline(result, pos):
+#  """A place where there should a semicolon, but compiler-wise it is optional."""
+#  errors = []
+#  if result:
+#    if isinstance(result, Error):
+#      errors.append(result)
+#      result = None
+#    else:
+#      errors.extend([e for e in result if isinstance(e, Error)])
+#
+#  if not result:
+#    errors.append(Error('MissingSemicolon', 'Expected a semicolon', pos, LINES))
+#
+#  return errors or None
 
 
 @rule(methodSignature + shouldBeSemicolonAndNewline + codeBlock)
