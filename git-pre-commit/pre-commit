@@ -2,9 +2,7 @@
 
 ####################################################
 # The following executes the ocstyle check on the changed files
-staged=$(git --no-pager diff --staged --name-only --no-ext-diff -- '*.m' '*.h' | tr '\n' ' ')
-echo "Potential objective-c files:$staged"
-oc=$(python ../ocstyle/src/ocstyle/main.py --validateIncludes=1 --validateExcludes=0 --maxLineLength=200 $staged)
+oc=$(git --no-pager diff -z --staged --name-only --no-ext-diff -- '*.m' '*.h' | xargs -0 python ../ocstyle/src/ocstyle/main.py --validateIncludes=1 --validateExcludes=0 --maxLineLength=200)
 gr=$(echo $oc | grep "ERROR")
 if [ $? -eq 0 ]
 then
